@@ -1,6 +1,8 @@
 /* jshint indent: 2 */
 const { Sequelize, DataTypes, Model } = require('sequelize');
 const sequelize = require('./index.js')
+const Student = require('./student.js')
+const Teacher = require('./teacher.js')
 class Grade extends Model { }
 Grade.init({
   courseID: {
@@ -34,4 +36,6 @@ Grade.init({
   sequelize,
   modelName: 'Grade'
 });
+Grade.belongsTo(Student, { foreignKey: 'studentID', })
+Grade.belongsTo(Teacher, { foreignKey: 'teacherID', })
 module.exports = Grade;

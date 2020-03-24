@@ -1,97 +1,58 @@
+const User = require('../models/user');
+// const Clazz = require('../models/class.js')
+const { setToken } = require('../auth/auth.js')
 
-const Student = require('../models/student');
-const Teacher = require('../models/teacher');
-const Role = require('../models/role.js')
-const Privilege = require('../models/privilege.js')
-const { genPassword, comparePassword, setToken } = require('../auth/auth.js')
+
 loginController = async (ctx) => {
-    let user = ctx.request.body
-    // console.log(user)
-    if (user && user.username && user.password) {
+    let reqUser = ctx.request.body
+    // const clazz = new Clazz({ _id: "20175000", className: "5dsdsfds", marjorName: "5555555", marjorCategory: "5454445", departmentName: "555555", monitor: "55451dssf" })
+    // clazz.save((err) => {
+    //     if (err) {
+    //         console.log(err)
+    //     }
+    //     console.log(44444)
+    // })
+    if (reqUser && reqUser.username && reqUser.password) {
         try {
-            let student = await Student.findOne({
-                where: {
-                    studentID: user.username
-                },
-                attributes: { exclude: ['email', 'tel', 'roleID'] },
-                include: [{
-                    model: Role,
-                    attributes: { exclude: ['roleID',] },
-                    include: [{
-                        attributes: { exclude: ['roleID',] },
-                        model: Privilege,
-
-                    }]
-                }]
-            })
-            let teacher = await Teacher.findOne({
-                where: {
-                    teacherID: user.username
-                },
-                attributes: { exclude: ['tel', 'roleID'] },
-                include: [{
-                    model: Role,
-                    attributes: { exclude: ['roleID',] },
-                    include: [{
-                        attributes: { exclude: ['roleID',] },
-                        model: Privilege,
-
-                    }]
-                }]
-            })
-            if (student || teacher) {
-
-                if (student) {
-                    student = JSON.parse(JSON.stringify(student))
-                    console.log(JSON.stringify(student))
-                    if (comparePassword(user.password, student.password)) {
-                        delete student.password
-                        console.log("setToken(student)", setToken(student))
-                        return ctx.body = {
-                            token: setToken(student),
-                            data: student,
-                            code: 200,
-                            msg: "登陆成功"
-
-                        }
-
-                        // ctx.redirect('/student');
-                        return;
-                    } else {
-                        return ctx.body = { code: 400, msg: '密码不匹配' }
-
-                    }
-
-                } else {
-
-                    teacher = JSON.parse(JSON.stringify(teacher))
-                    console.log(teacher, comparePassword(user.password, teacher.password))
-                    if (comparePassword(user.password, teacher.password)) {
-                        delete teacher.password
-                        return ctx.body = {
-                            token: setToken(teacher),
-                            data: teacher,
-                            code: 200,
-                            msg: "登陆成功"
-                        }
-
-                        return;
-                    } else {
-                        return ctx.body = { code: 400, msg: '密码不匹配' }
-
-                    }
+            let user = await User.verifyUser(reqUser)
+            if (user != false) {
+                let {
+                    password,
+                    roleId,
+                    ...rest
+                } = user
+                const { roleName } = roleId
+                return ctx.body = {
+                    token: setToken({
+                        roleName,
+                        ...rest,
+                    }),
+                    data: {
+                        roleId,
+                        ...rest
+                    },
+                    code: 200,
+                    succeed: 1,
+                    msg: "登陆成功"
                 }
 
             } else {
-                return ctx.body = { code: 400, msg: '账号不存在' }
+                return ctx.body = {
+                    code: 200,
+                    succeed: 0,
+                    msg: "账号密码不匹配"
+                }
 
             }
+
         } catch (error) {
-            return ctx.bodye = { code: 500, msg: '服务器错误' }
-
+            return ctx.body = {
+                code: 500,
+                succeed: 0,
+                msg: "服务器错误"
+            }
+            console.log(error)
         }
-
-
     }
 }
 

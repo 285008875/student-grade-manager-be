@@ -1,14 +1,13 @@
-
 const crypto = require("crypto");
 const jwt = require('jsonwebtoken');
 const SECRET = require('../config/config.js').secret;
-// console.log(SECRET)
 
 const genPassword = (content) => {
     let md5 = crypto.createHash('md5');
     return md5.update(content + SECRET).digest("hex");
 
 }
+
 const comparePassword = (publicKey, secretKey) => {
     console.log(genPassword(publicKey), secretKey)
     if (genPassword(publicKey) === secretKey) {
@@ -16,11 +15,16 @@ const comparePassword = (publicKey, secretKey) => {
     }
     return false
 }
+
 const setToken = (payload) => {
     // console.log("settoken", payload);
     // console.log(SECRET, payload)
-    return jwt.sign(payload, SECRET, { expiresIn: '2h' })
+    return jwt.sign(payload, SECRET, {
+        expiresIn: '2h'
+    })
 }
+
+
 const verifyToken = async (ctx, next) => {
     try {
         if (!ctx.header || !ctx.header.authorization) {
@@ -41,6 +45,7 @@ const verifyToken = async (ctx, next) => {
         console.log(err)
     }
 }
+
 decodeToken = (ctx) => {
     let token = ctx.headers.authorization.split(" ");
     let decoded = jwt.decode(token[1]);

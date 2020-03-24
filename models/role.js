@@ -1,27 +1,18 @@
-const { Sequelize, DataTypes, Model } = require('sequelize');
-const sequelize = require('./index.js')
-const Privilege = require('./privilege.js')
-class Role extends Model { }
-
-Role.init({
-  roleID: {
-    type: DataTypes.STRING(6),
-    allowNull: false,
-    primaryKey: true
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
+const PrivilegeSchema = require('./privilege')
+const RoleSchema = new Schema({
+  _id: {
+    type: String,
+    required: true,
+    index: true,
   },
   roleName: {
-    type: DataTypes.STRING(10),
-    allowNull: true
-  }
+    type: String,
+  },
+  privilege: [PrivilegeSchema]
 }, {
-  tableName: 'role',
-  sequelize,
-  modelName: 'Role'
-});
-Role.hasMany(Privilege, { foreignKey: 'roleID', })
-
-
-// Role.hasMany(RolePrivilege, { foreignKey: 'roleID', })
-// RolePrivilege.belongsTo(Role)
+  _id: false
+})
+const Role = mongoose.model('Role', RoleSchema)
 module.exports = Role;
-

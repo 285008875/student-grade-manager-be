@@ -1,36 +1,38 @@
-const { Sequelize, DataTypes, Model } = require('sequelize');
-const sequelize = require('./index.js')
-class Class extends Model { }
+// const { Sequelize, DataTypes, Model } = require('sequelize');
+// const sequelize = require('./index.js')
+// class Class extends Model { }
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
+const ClassSchema = new Schema({
+  _id: {
+    type: String,
+    required: true,
+    index: true,
 
-Class.init({
-  classID: {
-    type: DataTypes.STRING(10),
-    allowNull: false,
-    primaryKey: true
   },
   className: {
-    type: DataTypes.STRING(30),
-    allowNull: true
+    type: String,
+    required: true,
   },
-  majorID: {
-    type: DataTypes.STRING(10),
-    allowNull: true,
-    references: {
-      model: 'major',
-      key: 'majorID'
-    }
+  marjorName: {
+    type: String,
+    required: true,
+  },
+  marjorCategory: {
+    type: String,
+    required: true,
+  },
+
+  departmentName: {
+    type: String,
+    required: true,
   },
   monitor: {
-    type: DataTypes.STRING(12),
-    allowNull: true,
-    references: {
-      model: 'student',
-      key: 'studentID'
-    }
+    type: String,
+    ref: 'Student',
   }
 }, {
-  tableName: 'class',
-  sequelize,
-  modelName: 'Class'
-});
-module.exports = Class
+  _id: false
+})
+const Class = mongoose.model('Class', ClassSchema)
+module.exports = Class;
