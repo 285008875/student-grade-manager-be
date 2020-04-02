@@ -40,10 +40,6 @@ const UserSchema = new Schema({
     type: String,
     required: true,
   },
-  majorId: {
-    type: String,
-    ref: 'Major',
-  },
   classId: {
     type: String,
     ref: 'Class',
@@ -51,6 +47,7 @@ const UserSchema = new Schema({
   roleId: {
     type: String,
     ref: 'Role',
+    default: "s123"
   }
 }, {
   _id: false

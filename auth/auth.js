@@ -20,7 +20,7 @@ const setToken = (payload) => {
     // console.log("settoken", payload);
     // console.log(SECRET, payload)
     return jwt.sign(payload, SECRET, {
-        expiresIn: '2h'
+        expiresIn: '4h'
     })
 }
 
@@ -40,6 +40,8 @@ const verifyToken = async (ctx, next) => {
         ctx.state = {
             user: decoded
         }
+        // ctx.state.user = decoded
+
         await next();
     } catch (err) {
         console.log(err)

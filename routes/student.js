@@ -10,9 +10,9 @@ studentRouter.post("/grade", async ctx => {
     // ctx.body = 'studentRouter Ok'
     ctx.body = { "kdfhjds": 565656556 }
 })
-// studentRouter.get("/", async ctx => {
-//     console.log(ctx.headers)
-//     console.log(111111111111111)
-//     ctx.body = 'studentRouter Ok'
-// })
+studentRouter.get("/studentmanage", async ctx => {
+    
+    console.log(111111111111111)
+    // ctx.body = 'studentRouter Ok'
+})
 module.exports = studentRouter;

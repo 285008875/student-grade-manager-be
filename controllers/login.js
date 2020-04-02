@@ -1,5 +1,5 @@
 const User = require('../models/user');
-// const Clazz = require('../models/class.js')
+const Course = require('../models/course')
 const { setToken } = require('../auth/auth.js')
 
 
@@ -11,6 +11,10 @@ loginController = async (ctx) => {
     //         console.log(err)
     //     }
     //     console.log(44444)
+    // })
+    // const a = new Course({ _id: "1234565265", courseName: "数学", createTime: new Date().getFullYear() + '-' + new Date().getMonth(), classId:'2351515'})
+    // a.save(function (err,data) {
+    //     console.log(err,data)
     // })
     if (reqUser && reqUser.username && reqUser.password) {
         try {
@@ -46,12 +50,12 @@ loginController = async (ctx) => {
             }
 
         } catch (error) {
+            console.log(error)
             return ctx.body = {
                 code: 500,
                 succeed: 0,
                 msg: "服务器错误"
             }
-            console.log(error)
         }
     }
 }

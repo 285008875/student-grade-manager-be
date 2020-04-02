@@ -1,41 +1,31 @@
-/* jshint indent: 2 */
-const { Sequelize, DataTypes, Model } = require('sequelize');
-const sequelize = require('./index.js')
-const Student = require('./student.js')
-const Teacher = require('./teacher.js')
-class Grade extends Model { }
-Grade.init({
-  courseID: {
-    type: DataTypes.STRING(10),
-    allowNull: false,
-    primaryKey: true,
-    references: {
-      model: 'course',
-      key: 'courseID'
-    }
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
+const ClassSchema = new Schema({
+  _id: {
+    type: String,
+    // required: true,
+    index: true,
+
   },
-  studentID: {
-    type: DataTypes.STRING(12),
-    allowNull: false,
-    primaryKey: true,
-    references: {
-      model: 'student',
-      key: 'studentID'
-    }
+  studentId: {
+    type: String,
+    required: true,
+    ref:"User"
   },
-  grade: {
-    type: DataTypes.FLOAT,
-    allowNull: true
+  courseId: {
+    type: String,
+    required: true,
+    ref: "Course"
   },
-  semester: {
-    type: DataTypes.DATEONLY,
-    allowNull: true
+  score: {
+    type: Number,
+  },
+  semester:{
+    type:String,
+    default: new Date().getFullYear() + '-' + new Date().getMonth()>6 ?9:3
   }
 }, {
-  tableName: 'grade',
-  sequelize,
-  modelName: 'Grade'
-});
-Grade.belongsTo(Student, { foreignKey: 'studentID', })
-Grade.belongsTo(Teacher, { foreignKey: 'teacherID', })
-module.exports = Grade;
+  _id: false
+})
+const Class = mongoose.model('Class', ClassSchema)
+module.exports = Class;

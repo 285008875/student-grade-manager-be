@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const Class = require('./class')
 const Schema = mongoose.Schema;
 const CourseSchema = new Schema({
   _id: {
@@ -10,13 +11,15 @@ const CourseSchema = new Schema({
     type: String,
     required: true,
   },
-  teacherId: {
-    type: String,
-    ref: 'User',
-  }
+  createTime:{
+    type: String, 
+    default: new Date().getMonth() > 6 ? new Date().getFullYear() + '-' + 9 : new Date().getFullYear() + '-' + 3
+  },
 }, {
   _id: false
 })
+
+CourseSchema.index({ _id: 1, classId: 1 });
 const Course = mongoose.model('Course', CourseSchema)
 module.exports = Course;
 

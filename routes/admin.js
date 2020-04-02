@@ -1,9 +1,9 @@
 
 const Router = require('koa-router')
 const AdminControllers = require('../controllers/admin')
+const { verifyToken, decodeToken } = require('../auth/auth')
 
 const adminRouter = new Router({ prefix: '/admin' });
-const { verifyToken, decodeToken } = require('../auth/auth')
 adminRouter.use(verifyToken);
 
 adminRouter.get("/schoolcircle", async ctx => {
@@ -12,21 +12,32 @@ adminRouter.get("/schoolcircle", async ctx => {
 adminRouter.get("/monitor", async ctx => {
     console.log("/admin/monitor")
 })
-adminRouter.get("/studentmanage", async ctx => {
-    console.log("/admin/studentmanage")
-})
-adminRouter.get("/teachermanage", async ctx => {
-    console.log("/admin/teachermanage")
-})
-adminRouter.get("/grademanage", async ctx => {
-    console.log("/admin/grademanage")
-})
-adminRouter.get("/coursemanage", async ctx => {
-    console.log("/admin/coursemanage")
-})
+
+adminRouter.get("/studentmanage", AdminControllers.getStudent)
+adminRouter.post("/studentmanage", AdminControllers.updateStudent)
+adminRouter.post("/delstudentmanage", AdminControllers.deleteStudent)
+adminRouter.post("/addstudentmanage", AdminControllers.addStudent)
+adminRouter.post("/fileupload", AdminControllers.handleFileUpload)
+adminRouter.get("/filedownload", AdminControllers.handleFileDownload)
+
+adminRouter.get("/teachermanage", AdminControllers.getTeacher)
+adminRouter.post("/teachermanage", AdminControllers.updateTeacher)
+adminRouter.post("/delteachermanage", AdminControllers.deteleTeacher)
+adminRouter.get("/tfiledownload", AdminControllers.handleFileTDownload)
+
+
+
+adminRouter.get("/coursemanage", AdminControllers.getCourse)
+adminRouter.post("/updatecoursemanage", AdminControllers.updateCourse)
+adminRouter.post("/delcoursemanage", AdminControllers.deleteCourse)
+adminRouter.post("/addcoursemanage", AdminControllers.addCourse)
+
 adminRouter.get("/classmanage", AdminControllers.getClass)
-adminRouter.post("/majormanage", async ctx => {
-})
+adminRouter.post("/classmanage", AdminControllers.updateClass)
+adminRouter.post("/delclassmanage", AdminControllers.deleteClass)
+adminRouter.put("/classmanage", AdminControllers.addClass)
+
+// adminRouter.get("/majormanage",AdminControllers.updateClass)
 adminRouter.get("/impower", async ctx => {
     console.log("/admin/impower")
 })

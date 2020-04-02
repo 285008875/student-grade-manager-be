@@ -6,21 +6,21 @@ const Schema = mongoose.Schema;
 const ClassSchema = new Schema({
   _id: {
     type: String,
-    required: true,
+    // required: true,
     index: true,
 
   },
   className: {
     type: String,
-    required: true,
+    // required: true,
   },
   marjorName: {
     type: String,
-    required: true,
+    // required: true,
   },
   marjorCategory: {
     type: String,
-    required: true,
+    // required: true,
   },
 
   departmentName: {

@@ -1,10 +1,12 @@
 const Koa = require('koa')
 const json = require('koa-json')
 const onerror = require('koa-onerror')
-const bodyparser = require('koa-bodyparser')
+const koaBody = require('koa-body')
+// const bodyparser = require('koa-bodyparser');
 const logger = require('koa-logger')
 const helmet = require('koa-helmet');
 const JWT = require('koa-jwt')
+const path = require('path')
 const cors = require('@koa/cors');
 const compress = require('koa-compress')
 const SECRET = require('./config/config.js').secret;
@@ -27,14 +29,22 @@ app.use(async (ctx, next) => {
 })
 
 app.use(errorHandle)
-
-
-
-
-app.use(bodyparser({
-  enableTypes: ['json', 'form', 'text']
-}))
-app.use(json())
+// app.use(bodyparser()); 
+app.use(koaBody({
+  multipart: true, // 支持文件上传
+  encoding: 'utf-8',
+  json: true,
+  formidable: {
+    uploadDir: path.join(__dirname, '/upload/'), // 设置文件上传目录
+    keepExtensions: true,    // 保持文件的后缀
+    maxFieldsSize: 10 * 1024 * 1024, // 文件上传大小
+    onFileBegin: (name, file) => { // 文件上传前的设置
+      // console.log(`name: ${name}`);
+      // console.log(file);
+    },
+  }
+}));
+app.use(json({ pretty: true, param: 'pretty'}))
 app.use(logger())
 app.use(cors());
 app.use(helmet());
@@ -47,10 +57,10 @@ app.use(compress({
   flush: require('zlib').Z_SYNC_FLUSH
 }))
 //使用
-app.use(async (ctx, next) => {
-  ctx.compress = true; //是否压缩数据
-  await next();
-});
+// app.use(async (ctx, next) => {
+//   // ctx.compress = true; //是否压缩数据
+//   await next();
+// });
 
 
 // logger
@@ -62,7 +72,7 @@ app.use(headerRouter.routes(), headerRouter.allowedMethods())
 app.use(adminRouter.routes(), adminRouter.allowedMethods())
 
 app.use(JWT({ SECRET }).unless({
-  path: [/^\/login/],
+  path: [/^\/login/],// /^\/admin\/fileupload/, /^\/admin\/filedownload/
   passthrough: true
 }))
 

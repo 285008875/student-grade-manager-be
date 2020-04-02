@@ -6,6 +6,7 @@ const options = {
     useUnifiedTopology: true,
     bufferMaxEntries: 0
 };
+mongoose.set('useFindAndModify', false)
 mongoose.connect('mongodb://localhost:27017/wjdb', options)
     .then(() => console.log('mongodb连接成功........'))
     .catch(err => console.log(err, 'mongodb连接失败........'));
