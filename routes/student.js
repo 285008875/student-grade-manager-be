@@ -1,18 +1,14 @@
 const Router = require('koa-router');
-const sequelize = require("../models/index");
+const StudentControllers = require('../controllers/student')
 const studentRouter = new Router({ prefix: '/student' });
-const { verifyToken, decodeToken } = require('../auth/auth')
-studentRouter.use(verifyToken);
+const { verifyToken } = require('../auth/auth')
 
-studentRouter.post("/grade", async ctx => {
-    console.log("decodeToken", decodeToken(ctx))
-    // decodeToken(ctx)
-    // ctx.body = 'studentRouter Ok'
-    ctx.body = { "kdfhjds": 565656556 }
-})
-studentRouter.get("/studentmanage", async ctx => {
-    
-    console.log(111111111111111)
-    // ctx.body = 'studentRouter Ok'
-})
+studentRouter.use(verifyToken);
+studentRouter.get("/classname", StudentControllers.getClassName)
+studentRouter.get("/sports", StudentControllers.getSports)
+studentRouter.get("/moraledu", StudentControllers.getMoralEdu)
+studentRouter.get("/grademanage", StudentControllers.getStudentGradeInClass)
+// studentRouter.get("/grademanage")
+studentRouter.get("/allgrade", StudentControllers.getAllgrade)
+// studentRouter.get("/setting")
 module.exports = studentRouter;

@@ -1,31 +1,33 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-const ClassSchema = new Schema({
+const GradeSchema = new Schema({
   _id: {
     type: String,
-    // required: true,
+    required: true,
     index: true,
 
   },
   studentId: {
     type: String,
     required: true,
-    ref:"User"
+    ref:"User",
+    index: true,
   },
   courseId: {
     type: String,
-    required: true,
-    ref: "Course"
+    // required: true,
+    ref: "Course",
+    index: true,
   },
   score: {
     type: Number,
   },
   semester:{
     type:String,
-    default: new Date().getFullYear() + '-' + new Date().getMonth()>6 ?9:3
+    default: new Date().getMonth() > 6 ? new Date().getFullYear() + '-' + 9 : new Date().getFullYear()+'-'+3
   }
 }, {
   _id: false
 })
-const Class = mongoose.model('Class', ClassSchema)
-module.exports = Class;
+const Grade = mongoose.model('Grade', GradeSchema)
+module.exports = Grade;

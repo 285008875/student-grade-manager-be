@@ -1,11 +1,9 @@
 /* jshint indent: 2 */
 const mongoose = require('mongoose');
 const {
-  genPassword,
+
   comparePassword,
-  setToken,
-  verifyToken,
-  decodeToken
+
 } = require('../auth/auth')
 const Schema = mongoose.Schema;
 
@@ -41,7 +39,7 @@ const UserSchema = new Schema({
     required: true,
   },
   classId: {
-    type: String,
+    type: Number,
     ref: 'Class',
   },
   roleId: {
@@ -61,7 +59,9 @@ UserSchema.statics.verifyUser = async function (user) {
     roleName: 1,
     privilege: 1
   })
+  // console.log(temp)
   if (temp != null && comparePassword(user.password, temp.password)) {
+
     return temp.toObject()
   }
 

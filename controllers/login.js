@@ -1,21 +1,11 @@
 const User = require('../models/user');
-const Course = require('../models/course')
+const LogCounts= require('../models/logcount')
 const { setToken } = require('../auth/auth.js')
 
 
 loginController = async (ctx) => {
     let reqUser = ctx.request.body
-    // const clazz = new Clazz({ _id: "20175000", className: "5dsdsfds", marjorName: "5555555", marjorCategory: "5454445", departmentName: "555555", monitor: "55451dssf" })
-    // clazz.save((err) => {
-    //     if (err) {
-    //         console.log(err)
-    //     }
-    //     console.log(44444)
-    // })
-    // const a = new Course({ _id: "1234565265", courseName: "数学", createTime: new Date().getFullYear() + '-' + new Date().getMonth(), classId:'2351515'})
-    // a.save(function (err,data) {
-    //     console.log(err,data)
-    // })
+    // console.log(reqUser)
     if (reqUser && reqUser.username && reqUser.password) {
         try {
             let user = await User.verifyUser(reqUser)
@@ -25,7 +15,9 @@ loginController = async (ctx) => {
                     roleId,
                     ...rest
                 } = user
+                // console.log(user)
                 const { roleName } = roleId
+                await LogCounts.updateOne({ time: new Date().getFullYear() + '-' + (new Date().getMonth() + 1)},{$inc:{count:1}} ,{ upsert: true} )
                 return ctx.body = {
                     token: setToken({
                         roleName,

@@ -17,8 +17,6 @@ const comparePassword = (publicKey, secretKey) => {
 }
 
 const setToken = (payload) => {
-    // console.log("settoken", payload);
-    // console.log(SECRET, payload)
     return jwt.sign(payload, SECRET, {
         expiresIn: '4h'
     })

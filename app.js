@@ -13,11 +13,11 @@ const SECRET = require('./config/config.js').secret;
 const { verifyToken } = require('./auth/auth.js');
 const errorHandle = require('./middlewares/errorHandle')
 const adminRouter = require('./routes/admin')
-const headerRouter = require('./routes/header')
+const monitorRouter = require('./routes/monitor')
 const studentRouter = require('./routes/student')
 const teacherRouter = require('./routes/teacher')
 const loginRouter = require('./routes/login.js')
-
+const mongoDB = require('./models/index')
 const app = new Koa()
 // error handler
 onerror(app)
@@ -68,7 +68,7 @@ app.use(compress({
 app.use(loginRouter.routes(), loginRouter.allowedMethods())
 app.use(studentRouter.routes(), studentRouter.allowedMethods())
 app.use(teacherRouter.routes(), teacherRouter.allowedMethods())
-app.use(headerRouter.routes(), headerRouter.allowedMethods())
+app.use(monitorRouter.routes(), monitorRouter.allowedMethods())
 app.use(adminRouter.routes(), adminRouter.allowedMethods())
 
 app.use(JWT({ SECRET }).unless({

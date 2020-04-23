@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const ClassSchema = new Schema({
   _id: {
-    type: String,
+    type: Number,
     // required: true,
     index: true,
 

@@ -9,14 +9,12 @@ adminRouter.use(verifyToken);
 adminRouter.get("/schoolcircle", async ctx => {
     console.log("/admin/schoolcircle")
 })
-adminRouter.get("/monitor", async ctx => {
-    console.log("/admin/monitor")
-})
+adminRouter.get("/monitor", AdminControllers.getLogTimes)
 
 adminRouter.get("/studentmanage", AdminControllers.getStudent)
 adminRouter.post("/studentmanage", AdminControllers.updateStudent)
 adminRouter.post("/delstudentmanage", AdminControllers.deleteStudent)
-adminRouter.post("/addstudentmanage", AdminControllers.addStudent)
+adminRouter.post("/addstud  entmanage", AdminControllers.addStudent)
 adminRouter.post("/fileupload", AdminControllers.handleFileUpload)
 adminRouter.get("/filedownload", AdminControllers.handleFileDownload)
 
@@ -37,7 +35,22 @@ adminRouter.post("/classmanage", AdminControllers.updateClass)
 adminRouter.post("/delclassmanage", AdminControllers.deleteClass)
 adminRouter.put("/classmanage", AdminControllers.addClass)
 
-// adminRouter.get("/majormanage",AdminControllers.updateClass)
+adminRouter.get("/grademanage",AdminControllers.getGrade)
+adminRouter.post("/updategrademanage", AdminControllers.updeteGrade)
+adminRouter.post("/delgrademanage", AdminControllers.deleteGrade)
+
+adminRouter.get("/allgrade", AdminControllers.getAllgrade)
+
+adminRouter.get("/sports", AdminControllers.getSports)
+adminRouter.post("/updatesports", AdminControllers.updateSports)
+adminRouter.post("/delsports", AdminControllers.delSports)
+adminRouter.post("/addsports", AdminControllers.addSports)
+
+adminRouter.get("/moraledu", AdminControllers.getMoralEdu)
+adminRouter.post("/updatemoraledu", AdminControllers.updateMoralEdu)
+adminRouter.post("/delmoraledu", AdminControllers.delMoralEdu)
+adminRouter.post("/addmoraledu", AdminControllers.addMoralEdu)
+
 adminRouter.get("/impower", async ctx => {
     console.log("/admin/impower")
 })

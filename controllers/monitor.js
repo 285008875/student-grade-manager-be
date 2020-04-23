@@ -6,106 +6,46 @@ const Path = require('path')
 const fs = require('fs-extra')
 const User = require('../models/user');
 const Clazz = require('../models/class.js')
+const Course = require('../models/course')
 const Grade = require('../models/grade')
 const AllGrade = require('../models/allgrade')
 const MoralEdu = require('../models/moraledu')
 const Sports = require('../models/sports')
-class TeacherControllers {
 
-    static async  getStudentInClass(ctx) {
-        const user = decodeToken(ctx)
-        const {classId} = user
-        const result = await User.find({ classId: classId }).select('-password -classId -marjorId  -age -sex -email').or([{ roleId: 's123' }, { roleId: 'm123' }])
-        // console.log(result)
-        if (result.length!=0) {
-            return ctx.body = {
-                result,
-                code: 200,
-                succeed: 1
-            }
-        }else{
-            return ctx.body = {
-                msg:'无相关学生信息',
-                code: 200,
-                succeed: 0
-            }
-        }
-    } 
-    static async  modifyStudentOfRole(ctx) {
-        const studentId= ctx.request.body.studentId
-        
-        const user = decodeToken(ctx)
-        const { classId } = user
-        const result1 = await User.findByIdAndUpdate(studentId, { roleId: 's123' }, { new: true }).select('-password -classId -marjorId  -age -sex -email')
-        const result2 = await Clazz.findByIdAndUpdate(classId, { monitor: null }, { new: true })
-        console.log(result1,result2)
-        if (result1 !== null && result2 !==null ) {
-            return ctx.body = {
-                code: 200,
-                succeed: 1
-            }
-        } else {
-            return ctx.body = {
-                msg: '无相关学生信息',
-                code: 200,
-                succeed: 0
-            }
-        }
-    } 
-    static async  setStudentOfRole(ctx) {
-        const studentId = ctx.request.body.studentId
-
-        const user = decodeToken(ctx)
-        const { classId } = user
-        const result1 = await User.findByIdAndUpdate(studentId, { roleId: 'm123' }, { new: true }).select('-password -classId -marjorId  -age -sex -email')
-        const result2 = await Clazz.findByIdAndUpdate(classId, { monitor: studentId }, { new: true })
-        console.log(result1, result2)
-        if (result1 !== null && result2 !== null) {
-            return ctx.body = {
-                code: 200,
-                succeed: 1
-            }
-        } else {
-            return ctx.body = {
-                msg: '无相关学生信息',
-                code: 200,
-                succeed: 0
-            }
-        }
-    }
-    static async getStudentGradeInClass(ctx){
+class monitorControllers{
+    static async getStudentGradeInClass(ctx) {
         const user = decodeToken(ctx)
         let { classId } = user
         classId = parseInt(classId)
         console.log(classId)
-        const student = await User.find({ classId: classId, $or: [{ roleId: 's123' }, { roleId: 'm123' }] },{_id:1})
-        .then(function (docs){
+        const student = await User.find({ classId: classId, $or: [{ roleId: 's123' }, { roleId: 'm123' }]  }, { _id: 1 })
+            .then(function (docs) {
                 const result = [];
                 docs.map((doc) => {
                     result.push(doc._id)
                 })
                 // console.log(result)
                 return result
-        })
+            })
         // console.log(student)
-        const result = await Grade.find({ studentId: { $in: student }})
-        .populate('studentId',{
-            _id:1,
-            name:1,
-            // match:{}
-        })
-        .populate('courseId',{
-            _id:1,
-            courseName:1
-        })
-        .lean()
-        if (result.length!=0) {
+        const result = await Grade.find({ studentId: { $in: student } })
+            .populate('studentId', {
+                _id: 1,
+                name: 1,
+                // match:{}
+            })
+            .populate('courseId', {
+                _id: 1,
+                courseName: 1
+            })
+            .lean()
+        if (result.length != 0) {
             return ctx.body = {
                 code: 200,
                 succeed: 1,
                 result: result
             }
-        }else{
+        } else {
             return ctx.body = {
                 code: 200,
                 succeed: 0
@@ -168,7 +108,7 @@ class TeacherControllers {
             console.log(error)
         }
     }
-    static async handleFileUpload(ctx){
+    static async handleFileUpload(ctx) {
         try {
 
             const { path, type } = ctx.request.files.GradeFile
@@ -212,7 +152,7 @@ class TeacherControllers {
                 })
             // console.log(student)
             const result = await Grade.find({ studentId: { $in: student } })
-                .populate('studentId', {          
+                .populate('studentId', {
                     name: 1,
                     // match:{}
                 })
@@ -220,12 +160,12 @@ class TeacherControllers {
                     courseName: 1
                 })
                 .lean()
-                .then((docs)=>{
+                .then((docs) => {
                     console.log(docs);
-                    
+
                     return docs
                     // docs.map((doc)=>{
-                        
+
                     // })
                 })
             const filePath = Path.join(__dirname, '../upload/')
@@ -278,7 +218,7 @@ class TeacherControllers {
                     await AllGrade.updateOne({ _id: _id }, rest, { upsert: true })
                 })
             })
-        
+
 
 
         const moralEdu = await MoralEdu.aggregate([
@@ -389,15 +329,15 @@ class TeacherControllers {
             const user = decodeToken(ctx)
             let { classId } = user
             classId = parseInt(classId)
-            const student = await User.find({ classId: classId, $or: [{ roleId: 's123' }, { roleId: 'm123' }] }, { _id: 1 })
-            .then(function (docs) {
-                const result = [];
-                docs.map((doc) => {
-                    result.push(doc._id)
+            const student = await User.find({ classId: classId, $or: [{ roleId: 's123' }, { roleId: 'm123' }]  }, { _id: 1 })
+                .then(function (docs) {
+                    const result = [];
+                    docs.map((doc) => {
+                        result.push(doc._id)
+                    })
+                    return result
                 })
-                return result
-            })
-            
+
             const sports = await Sports.aggregate([
                 {
                     $match: { studentId: { $in: student } }
@@ -411,18 +351,18 @@ class TeacherControllers {
                     }
                 },
                 {
-                    $project: { 
-                        _id: 1, 
-                        'user.name': 1, 
-                        studentId: 1, 
-                        score1: 1, 
-                        score2: 2, 
-                        score3: 3, 
-                        score4: 4, 
-                        time: 1, 
-                        "sum": { 
-                            "$add": ["$score1", "$score2", "$score3", "$score4"] 
-                        } 
+                    $project: {
+                        _id: 1,
+                        'user.name': 1,
+                        studentId: 1,
+                        score1: 1,
+                        score2: 2,
+                        score3: 3,
+                        score4: 4,
+                        time: 1,
+                        "sum": {
+                            "$add": ["$score1", "$score2", "$score3", "$score4"]
+                        }
                     }
                 },
                 {
@@ -465,7 +405,7 @@ class TeacherControllers {
             console.log(error)
         }
     }
-    static async delSports(ctx) { 
+    static async delSports(ctx) {
         const sports = ctx.request.body
         console.log(sports)
         const result = await Sports.deleteOne(sports)
@@ -522,7 +462,7 @@ class TeacherControllers {
         }
     }
 
-    static async getMoralEdu(ctx) { 
+    static async getMoralEdu(ctx) {
         try {
             const user = decodeToken(ctx)
             let { classId } = user
@@ -583,7 +523,7 @@ class TeacherControllers {
             console.log(error)
         }
     }
-    static async updateMoralEdu(ctx) { 
+    static async updateMoralEdu(ctx) {
         try {
 
             const moral = ctx.request.body
@@ -602,7 +542,7 @@ class TeacherControllers {
             console.log(error)
         }
     }
-    static async delMoralEdu(ctx) { 
+    static async delMoralEdu(ctx) {
         try {
             const moral = ctx.request.body
             console.log(moral)
@@ -624,7 +564,7 @@ class TeacherControllers {
 
         }
     }
-    static async addMoralEdu(ctx) { 
+    static async addMoralEdu(ctx) {
         try {
             const moral = ctx.request.body
             let result = await MoralEdu.create(moral)
@@ -658,4 +598,4 @@ class TeacherControllers {
         }
     }
 }
-module.exports = TeacherControllers
+module.exports = monitorControllers
