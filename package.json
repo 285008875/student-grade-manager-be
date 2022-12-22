@@ -16,7 +16,7 @@
     "filter-obj": "^2.0.1",
     "fs-extra": "^9.0.0",
     "json2xlsx": "^0.1.6",
-    "jsonwebtoken": "^8.5.1",
+    "jsonwebtoken": "^9.0.0",
     "koa": "^2.11.0",
     "koa-body": "^4.1.1",
     "koa-combine-routers": "^4.0.2",
